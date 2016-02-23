@@ -62,7 +62,9 @@ module StripeMock
         cus = assert_existence :customer, $1, customers[$1]
 
         # Delete those params if their value is nil. Workaround of the problematic way Stripe serialize objects
+        params.delete(:source)  if params[:source]  && params[:source].empty?
         params.delete(:sources) if params[:sources] && params[:sources][:data].nil?
+        params.delete(:sources) if params[:sources] && params[:sources][:data].all?(&:empty?)
         params.delete(:subscriptions) if params[:subscriptions] && params[:subscriptions][:data].nil?
         # Delete those params if their values aren't valid. Workaround of the problematic way Stripe serialize objects
         if params[:sources] && !params[:sources][:data].nil?
